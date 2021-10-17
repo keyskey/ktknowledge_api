@@ -1,0 +1,18 @@
+version: "3.3"
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ktknowledge_db
+    restart: always
+    ports:
+      - ${MYSQL_PORT}:3306
+    volumes:
+      - ./src/main/resources/db/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./src/main/resources/db/initdb.d:/docker-entrypoint-initdb.d
+      - ./src/main/resources/db/store:/var/lib/mysql
+      - ./src/main/resources/db/log:/var/log/mysql

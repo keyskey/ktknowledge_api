@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.kotlin.dsl.flyway
 
 plugins {
 	id("org.springframework.boot") version "2.6.0-SNAPSHOT"
@@ -6,6 +7,7 @@ plugins {
 	kotlin("jvm") version "1.5.31"
 	kotlin("plugin.spring") version "1.5.31"
 	id("com.expediagroup.graphql") version "5.1.0"
+	id("org.flywaydb.flyway") version "8.0.1"
 }
 
 group = "com.keyskey"
@@ -25,7 +27,7 @@ repositories {
 }
 
 dependencies {
-	implementation("org.flywaydb:flyway-core")
+	implementation("mysql:mysql-connector-java:8.0.25")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("com.expediagroup", "graphql-kotlin-spring-server", "5.1.0")
@@ -43,4 +45,10 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+flyway {
+	url = System.getenv("MYSQL_URL")
+	user = System.getenv("MYSQL_USER")
+	password = System.getenv("MYSQL_PASSWORD")
 }
