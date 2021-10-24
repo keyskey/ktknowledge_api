@@ -28,12 +28,16 @@ repositories {
 
 dependencies {
 	implementation("mysql:mysql-connector-java:8.0.25")
+	implementation("org.ktorm:ktorm-core:3.4.1")
+	implementation("org.ktorm:ktorm-support-mysql:3.4.1")
+	implementation("org.springframework.boot:spring-boot-starter-jdbc:2.5.5")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("com.expediagroup", "graphql-kotlin-spring-server", "5.1.0")
-	developmentOnly("org.springframework.boot:spring-boot-devtools")
-	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	implementation("org.springframework.boot:spring-boot-starter:2.5.5")
+	developmentOnly("org.springframework.boot:spring-boot-devtools:2.5.5")
+	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:2.5.5")
+	testImplementation("org.springframework.boot:spring-boot-starter-test:2.5.5")
 }
 
 tasks.withType<KotlinCompile> {
