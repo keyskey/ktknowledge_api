@@ -1,3 +1,8 @@
 graphql:
   packages:
     - "com.keyskey.ktknowledge"
+spring:
+  datasource:
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
