@@ -1,4 +1,4 @@
-package com.keyskey.ktknowledge.queries
+package com.keyskey.ktknowledge.handlers.graphql.queries
 
 import com.expediagroup.graphql.server.operations.Query
 import com.keyskey.ktknowledge.entities.User
