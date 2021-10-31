@@ -1,7 +1,7 @@
-package com.keyskey.ktknowledge.handlers.graphql.queries
+package com.keyskey.ktknowledge.handlers.graphql.mutations
 
 import com.expediagroup.graphql.generator.scalars.ID
-import com.expediagroup.graphql.server.operations.Query
+import com.expediagroup.graphql.server.operations.Mutation
 import com.keyskey.ktknowledge.handlers.graphql.types.UserType
 import com.keyskey.ktknowledge.handlers.graphql.types.toUserType
 import com.keyskey.ktknowledge.handlers.graphql.utils.toIntOrNull
@@ -9,20 +9,26 @@ import com.keyskey.ktknowledge.repositories.UserRepository
 import org.springframework.stereotype.Component
 
 @Component
-class UserQuery(private val userRepository: UserRepository): Query {
-    fun users(): List<UserType> {
+class UserMutation(private val userRepository: UserRepository): Mutation {
+    fun createUser(name: String): UserType? {
         return userRepository
-            .findAll()
-            .map { it.toUserType() }
+            .create(name)
+            ?.toUserType()
     }
 
-    fun user(id: ID): UserType? {
+    fun updateUser(id: ID, name: String): UserType? {
         val user = id.toIntOrNull()?.let {
             userRepository
-                .findById(it)
+                .update(it, name)
                 ?.toUserType()
         }
 
         return user
+    }
+
+    fun deleteUser(id: ID): ID? {
+        val success = id.toIntOrNull()?.let { userRepository.delete(it) }
+
+        return if (success!!) id else null
     }
 }
