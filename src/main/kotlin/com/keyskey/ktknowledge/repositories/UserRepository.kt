@@ -21,7 +21,7 @@ class UserRepository(val database: Database) {
         checkNotNull(createdAt)
         checkNotNull(updatedAt)
 
-        return User(id, UserProperty(name, createdAt, updatedAt))
+        return User(id, UserProperty(name), createdAt, updatedAt)
     }
 
     fun findAll(): List<User> {
@@ -41,26 +41,26 @@ class UserRepository(val database: Database) {
             .singleOrNull()
     }
 
-    fun create(name: String): User {
-        val property = UserProperty(name, timestamp(), timestamp())
+    fun create(property: UserProperty): User {
+        val now = timestamp()
         val id = database.insertAndGenerateKey(Users) {
             set(it.name, property.name)
-            set(it.createdAt, property.createdAt)
-            set(it.updatedAt, property.updatedAt)
+            set(it.createdAt, now)
+            set(it.updatedAt, now)
         }.toString().toInt()
 
-        return User(id, property)
+        return User(id, property, now, now)
     }
 
-    fun updateName(id: Int, name: String): User? {
+    fun update(id: Int, property: UserProperty): Int? {
         val numRowsAffected = database.update(Users) {
-            set(it.name, name)
+            set(it.name, property.name)
             set(it.updatedAt, timestamp())
             where { it.id eq id }
         }
 
         return if (numRowsAffected > 0) {
-            findById(id)
+            id
         } else {
             null
         }
