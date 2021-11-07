@@ -12,7 +12,7 @@ services:
     ports:
       - ${MYSQL_PORT}:3306
     volumes:
-      - ./src/main/resources/db/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
-      - ./src/main/resources/db/initdb.d:/docker-entrypoint-initdb.d
-      - ./src/main/resources/db/store:/var/lib/mysql
-      - ./src/main/resources/db/log:/var/log/mysql
+      - ./docker/mysql/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./docker/mysql/initdb.d:/docker-entrypoint-initdb.d
+      - ./docker/mysql/store:/var/lib/mysql
+      - ./docker/mysql/log:/var/log/mysql
