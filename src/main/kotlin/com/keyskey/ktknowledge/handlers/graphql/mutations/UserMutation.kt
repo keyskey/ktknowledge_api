@@ -4,6 +4,7 @@ import com.expediagroup.graphql.generator.scalars.ID
 import com.expediagroup.graphql.server.operations.Mutation
 import com.keyskey.ktknowledge.handlers.graphql.types.UserType
 import com.keyskey.ktknowledge.handlers.graphql.types.toUserType
+import com.keyskey.ktknowledge.handlers.graphql.utils.toID
 import com.keyskey.ktknowledge.handlers.graphql.utils.toIntOrNull
 import com.keyskey.ktknowledge.repositories.UserRepository
 import org.springframework.stereotype.Component
@@ -13,13 +14,13 @@ class UserMutation(private val userRepository: UserRepository): Mutation {
     fun createUser(name: String): UserType? {
         return userRepository
             .create(name)
-            ?.toUserType()
+            .toUserType()
     }
 
-    fun updateUser(id: ID, name: String): UserType? {
+    fun updateUserName(id: ID, name: String): UserType? {
         val user = id.toIntOrNull()?.let {
             userRepository
-                .update(it, name)
+                .updateName(it, name)
                 ?.toUserType()
         }
 
@@ -27,8 +28,8 @@ class UserMutation(private val userRepository: UserRepository): Mutation {
     }
 
     fun deleteUser(id: ID): ID? {
-        val success = id.toIntOrNull()?.let { userRepository.delete(it) }
+        val deletedUserId = id.toIntOrNull()?.let { userRepository.delete(it) }
 
-        return if (success!!) id else null
+        return deletedUserId?.toID()
     }
 }
