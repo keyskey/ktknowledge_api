@@ -1,63 +1,78 @@
 package com.keyskey.ktknowledge.repositories
 
-import com.keyskey.ktknowledge.repositories.database.UserRecord
+import com.keyskey.ktknowledge.entities.User
+import com.keyskey.ktknowledge.entities.UserProperty
 import com.keyskey.ktknowledge.repositories.database.Users
+import com.keyskey.ktknowledge.repositories.database.timestamp
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.springframework.stereotype.Repository
-import java.time.LocalDateTime
 
 @Repository
 class UserRepository(val database: Database) {
-    fun QueryRowSet.toRecord(): UserRecord = UserRecord(
-        id = this[Users.id],
-        name = this[Users.name],
-        createdAt = this[Users.createdAt],
-        updatedAt = this[Users.updatedAt]
-    )
+    private fun QueryRowSet.toUser(): User {
+        val id = this[Users.id]
+        val name = this[Users.name]
+        val createdAt = this[Users.createdAt]
+        val updatedAt = this[Users.updatedAt]
 
-    fun findAll(): List<UserRecord> {
+        checkNotNull(id)
+        checkNotNull(name)
+        checkNotNull(createdAt)
+        checkNotNull(updatedAt)
+
+        return User(id, UserProperty(name, createdAt, updatedAt))
+    }
+
+    fun findAll(): List<User> {
         return database
             .from(Users)
             .select()
-            .map { it.toRecord() }
+            .map { it.toUser() }
     }
 
-    fun findById(id: Int): UserRecord? {
+    fun findById(id: Int): User? {
         return database
             .from(Users)
             .select()
             .where { Users.id eq id }
             .limit(1)
-            .map { it.toRecord() }
+            .map { it.toUser() }
             .singleOrNull()
     }
 
-    fun create(name: String): UserRecord? {
+    fun create(name: String): User {
+        val property = UserProperty(name, timestamp(), timestamp())
         val id = database.insertAndGenerateKey(Users) {
-            set(it.name, name)
-            set(it.createdAt, now())
-            set(it.updatedAt, now())
-        } as Int?
+            set(it.name, property.name)
+            set(it.createdAt, property.createdAt)
+            set(it.updatedAt, property.updatedAt)
+        }.toString().toInt()
 
-        return id?.let { findById(it) }
+        return User(id, property)
     }
 
-    fun update(id: Int, name: String): UserRecord? {
-        val numUpdatedRows = database.update(Users) {
+    fun updateName(id: Int, name: String): User? {
+        val numRowsAffected = database.update(Users) {
             set(it.name, name)
-            set(it.updatedAt, now())
+            set(it.updatedAt, timestamp())
             where { it.id eq id }
         }
 
-        return if (numUpdatedRows > 0) findById(id) else null
+        return if (numRowsAffected > 0) {
+            findById(id)
+        } else {
+            null
+        }
     }
 
-    fun delete(id: Int): Boolean {
-        val numDeletedRows = database.delete(Users) { it.id eq id }
+    fun delete(id: Int): Int? {
+        val numRowsAffected = database.delete(Users) { it.id eq id }
 
-        return numDeletedRows > 0
+        return if (numRowsAffected > 0) {
+            id
+        } else {
+            null
+        }
     }
-
-    private fun now(): LocalDateTime = LocalDateTime.now()
 }
