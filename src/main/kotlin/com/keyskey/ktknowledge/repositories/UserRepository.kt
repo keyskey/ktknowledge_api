@@ -1,9 +1,7 @@
 package com.keyskey.ktknowledge.repositories
 
 import com.keyskey.ktknowledge.entities.User
-import com.keyskey.ktknowledge.entities.UserProperty
 import com.keyskey.ktknowledge.repositories.database.Users
-import com.keyskey.ktknowledge.repositories.database.timestamp
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.springframework.stereotype.Repository
@@ -57,13 +55,9 @@ class UserRepository(val database: Database) {
         }
     }
 
-    fun delete(id: Int): Int? {
-        val numRowsAffected = database.delete(Users) { it.id eq id }
-
-        return if (numRowsAffected > 0) {
-            id
-        } else {
-            null
+    fun delete(id: Int) {
+        database.delete(Users) {
+            it.id eq id
         }
     }
 }
