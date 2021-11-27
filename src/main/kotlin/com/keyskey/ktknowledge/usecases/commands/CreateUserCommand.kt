@@ -9,10 +9,8 @@ import org.springframework.transaction.annotation.Transactional
 class CreateUserCommand(private val userRepository: UserRepository) {
     @Transactional
     fun call(name: String): User {
-        val userId = userRepository.findAll().size + 1
-        val user = User.build(userId, name)
-        userRepository.create(user)
+        val user = User.build(name = name)
 
-        return user
+        return userRepository.create(user)
     }
 }

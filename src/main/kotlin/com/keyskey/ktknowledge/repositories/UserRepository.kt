@@ -39,12 +39,14 @@ class UserRepository(val database: Database) {
             .singleOrNull()
     }
 
-    fun create(user: User) {
-        database.insert(Users) {
+    fun create(user: User): User {
+        val id = database.insertAndGenerateKey(Users) {
             set(it.name, user.name)
             set(it.createdAt, user.createdAt)
             set(it.updatedAt, user.updatedAt)
-        }
+        }.toString().toInt()
+
+        return user.copy(id = id)
     }
 
     fun update(user: User) {
