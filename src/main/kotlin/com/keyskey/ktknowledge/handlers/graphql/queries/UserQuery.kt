@@ -4,7 +4,7 @@ import com.expediagroup.graphql.generator.scalars.ID
 import com.expediagroup.graphql.server.operations.Query
 import com.keyskey.ktknowledge.handlers.graphql.types.UserType
 import com.keyskey.ktknowledge.handlers.graphql.types.toUserType
-import com.keyskey.ktknowledge.handlers.graphql.utils.toIntOrNull
+import com.keyskey.ktknowledge.handlers.graphql.utils.toInt
 import com.keyskey.ktknowledge.repositories.UserRepository
 import org.springframework.stereotype.Component
 
@@ -17,12 +17,10 @@ class UserQuery(private val userRepository: UserRepository): Query {
     }
 
     fun user(id: ID): UserType? {
-        val user = id.toIntOrNull()?.let {
-            userRepository
-                .findById(it)
-                ?.toUserType()
-        }
+        val intId = id.toInt()
 
-        return user
+        return userRepository
+            .findById(intId)
+            ?.toUserType()
     }
 }
