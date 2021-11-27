@@ -1,4 +1,4 @@
-package com.keyskey.ktknowledge.repositories.database
+package com.keyskey.ktknowledge.utils
 
 import java.time.LocalDateTime
 
