@@ -35,6 +35,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("com.expediagroup", "graphql-kotlin-spring-server", "5.1.0")
 	implementation("org.springframework.boot:spring-boot-starter:2.5.5")
+	implementation("org.valiktor:valiktor-spring-boot-starter:0.12.0")
 	developmentOnly("org.springframework.boot:spring-boot-devtools:2.5.5")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:2.5.5")
 	testImplementation("org.springframework.boot:spring-boot-starter-test:2.5.5")
