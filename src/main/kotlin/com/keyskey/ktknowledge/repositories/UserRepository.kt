@@ -49,10 +49,11 @@ class UserRepository(val database: Database) {
         }
     }
 
-        return if (numRowsAffected > 0) {
-            id
-        } else {
-            null
+    fun update(user: User) {
+        database.update(Users) {
+            set(it.name, user.name)
+            set(it.updatedAt, user.updatedAt)
+            where { it.id eq user.id }
         }
     }
 
