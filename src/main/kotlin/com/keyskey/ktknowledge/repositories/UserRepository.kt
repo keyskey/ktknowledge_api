@@ -1,9 +1,7 @@
 package com.keyskey.ktknowledge.repositories
 
 import com.keyskey.ktknowledge.entities.User
-import com.keyskey.ktknowledge.entities.UserProperty
 import com.keyskey.ktknowledge.repositories.database.Users
-import com.keyskey.ktknowledge.repositories.database.timestamp
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.springframework.stereotype.Repository
@@ -21,7 +19,7 @@ class UserRepository(val database: Database) {
         checkNotNull(createdAt)
         checkNotNull(updatedAt)
 
-        return User(id, UserProperty(name), createdAt, updatedAt)
+        return User(id, name, createdAt, updatedAt)
     }
 
     fun findAll(): List<User> {
@@ -41,38 +39,27 @@ class UserRepository(val database: Database) {
             .singleOrNull()
     }
 
-    fun create(property: UserProperty): User {
-        val now = timestamp()
+    fun create(user: User): User {
         val id = database.insertAndGenerateKey(Users) {
-            set(it.name, property.name)
-            set(it.createdAt, now)
-            set(it.updatedAt, now)
+            set(it.name, user.name)
+            set(it.createdAt, user.createdAt)
+            set(it.updatedAt, user.updatedAt)
         }.toString().toInt()
 
-        return User(id, property, now, now)
+        return user.copy(id = id)
     }
 
-    fun update(id: Int, property: UserProperty): Int? {
-        val numRowsAffected = database.update(Users) {
-            set(it.name, property.name)
-            set(it.updatedAt, timestamp())
-            where { it.id eq id }
-        }
-
-        return if (numRowsAffected > 0) {
-            id
-        } else {
-            null
+    fun update(user: User) {
+        database.update(Users) {
+            set(it.name, user.name)
+            set(it.updatedAt, user.updatedAt)
+            where { it.id eq user.id }
         }
     }
 
-    fun delete(id: Int): Int? {
-        val numRowsAffected = database.delete(Users) { it.id eq id }
-
-        return if (numRowsAffected > 0) {
-            id
-        } else {
-            null
+    fun delete(id: Int) {
+        database.delete(Users) {
+            it.id eq id
         }
     }
 }
