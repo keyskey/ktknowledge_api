@@ -8,9 +8,13 @@ import org.springframework.stereotype.Component
 
 @Component
 class CreateUserMutation(private val createUserCommand: CreateUserCommand): Mutation {
-    fun createUser(name: String): UserType {
+    fun createUser(name: String, email: String, password: String): UserType {
         val response = createUserCommand
-            .call(name)
+            .call(
+                name = name,
+                email = email,
+                password = password
+            )
             .toUserType()
 
         return response
