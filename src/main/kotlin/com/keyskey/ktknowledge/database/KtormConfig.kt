@@ -1,4 +1,4 @@
-package com.keyskey.ktknowledge.repositories.database
+package com.keyskey.ktknowledge.database
 
 import org.ktorm.database.Database
 import org.springframework.context.annotation.Bean

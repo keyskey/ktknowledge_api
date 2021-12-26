@@ -1,4 +1,4 @@
-package com.keyskey.ktknowledge.repositories.database
+package com.keyskey.ktknowledge.database
 
 import org.ktorm.schema.Table
 import org.ktorm.schema.datetime
