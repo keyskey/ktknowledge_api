@@ -1,7 +1,7 @@
 package com.keyskey.ktknowledge.infrastructure.queries
 
 import com.keyskey.ktknowledge.entities.User
-import com.keyskey.ktknowledge.database.Users
+import com.keyskey.ktknowledge.infrastructure.database.Users
 import com.keyskey.ktknowledge.usecases.user.UsersQuery
 import org.ktorm.database.Database
 import org.ktorm.dsl.*

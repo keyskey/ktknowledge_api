@@ -2,7 +2,7 @@ package com.keyskey.ktknowledge.infrastructure.repositories
 
 import com.keyskey.ktknowledge.entities.User
 import com.keyskey.ktknowledge.entities.UsersRepository
-import com.keyskey.ktknowledge.database.Users
+import com.keyskey.ktknowledge.infrastructure.database.Users
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.springframework.stereotype.Repository
