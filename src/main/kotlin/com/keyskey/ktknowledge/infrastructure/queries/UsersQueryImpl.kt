@@ -1,13 +1,15 @@
-package com.keyskey.ktknowledge.repositories
+package com.keyskey.ktknowledge.infrastructure.queries
 
 import com.keyskey.ktknowledge.entities.User
-import com.keyskey.ktknowledge.repositories.database.Users
+import com.keyskey.ktknowledge.infrastructure.database.Users
+import com.keyskey.ktknowledge.usecases.user.UsersQuery
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.springframework.stereotype.Repository
+import java.time.LocalDateTime
 
 @Repository
-class UserRepository(val database: Database) {
+class UsersQueryImpl(val database: Database): UsersQuery {
     private fun QueryRowSet.toUser(): User {
         val id = this[Users.id]
         val name = this[Users.name]
@@ -33,14 +35,7 @@ class UserRepository(val database: Database) {
         )
     }
 
-    fun findAll(): List<User> {
-        return database
-            .from(Users)
-            .select()
-            .map { it.toUser() }
-    }
-
-    fun findById(id: Int): User? {
+    override fun findById(id: Int): User? {
         return database
             .from(Users)
             .select()
@@ -50,29 +45,11 @@ class UserRepository(val database: Database) {
             .singleOrNull()
     }
 
-    fun create(user: User): User {
-        val id = database.insertAndGenerateKey(Users) {
-            set(it.name, user.name)
-            set(it.email, user.email)
-            set(it.password, user.password)
-            set(it.createdAt, user.createdAt)
-            set(it.updatedAt, user.updatedAt)
-        }.toString().toInt()
-
-        return user.copy(id = id)
-    }
-
-    fun update(user: User) {
-        database.update(Users) {
-            set(it.name, user.name)
-            set(it.updatedAt, user.updatedAt)
-            where { it.id eq user.id }
-        }
-    }
-
-    fun delete(id: Int) {
-        database.delete(Users) {
-            it.id eq id
-        }
+    override fun findByCreatedAtRange(from: LocalDateTime, to: LocalDateTime): List<User> {
+        return database
+            .from(Users)
+            .select()
+            .where { (Users.createdAt greaterEq from) and (Users.createdAt lessEq to) }
+            .map { it.toUser() }
     }
 }
