@@ -3,17 +3,17 @@ package com.keyskey.ktknowledge.handlers.graphql.queries
 import com.expediagroup.graphql.generator.scalars.ID
 import com.expediagroup.graphql.server.operations.Query
 import com.keyskey.ktknowledge.handlers.graphql.types.UserType
-import com.keyskey.ktknowledge.handlers.graphql.types.toUserType
 import com.keyskey.ktknowledge.handlers.graphql.utils.toInt
 import com.keyskey.ktknowledge.usecases.user.UserSearcher
 import org.springframework.stereotype.Component
 
 @Component
 class UserQuery(private val userSearcher: UserSearcher): Query {
+    @Suppress("unused")
     fun newUsers(): List<UserType> {
         return userSearcher
             .findNewUsers()
-            .map { it.toUserType() }
+            .map { UserType(it) }
     }
 
     fun user(id: ID): UserType? {
@@ -21,6 +21,6 @@ class UserQuery(private val userSearcher: UserSearcher): Query {
 
         return userSearcher
             .findOne(intId)
-            ?.toUserType()
+            ?.let { UserType(it) }
     }
 }

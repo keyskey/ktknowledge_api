@@ -9,11 +9,16 @@ import java.time.LocalDateTime
 const val userTypeGraphQLName = "User"
 
 @GraphQLName(userTypeGraphQLName)
-data class UserType (val id: ID, val name: String, val createdAt: LocalDateTime, val updatedAt: LocalDateTime)
-
-fun User.toUserType(): UserType = UserType(
-    id = id.toID(userTypeGraphQLName),
-    name = name,
-    createdAt = createdAt,
-    updatedAt = updatedAt
-)
+data class UserType(
+    val id: ID,
+    val name: String,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime)
+{
+    constructor(user: User) : this(
+        user.id.toID(userTypeGraphQLName),
+        user.name,
+        user.createdAt,
+        user.updatedAt
+    )
+}
