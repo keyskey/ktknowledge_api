@@ -3,6 +3,6 @@ graphql:
     - "com.keyskey.ktknowledge"
 spring:
   datasource:
-    url: ${MYSQL_URL}
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/ktknowledge_db?autoReconnect=true&useSSL=false
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
