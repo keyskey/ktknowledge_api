@@ -1,0 +1,32 @@
+name: CI
+
+on: [push, workflow_dispatch]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup middlewares
+        run: |
+          cp .env.dev .env
+          cat .env >> $GITHUB_ENV
+          docker-compose -f docker-compose.dev.yml up -d
+          docker-compose -f docker-compose.dev.yml ps
+
+      - name: Setup JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: temurin
+          java-version: 11
+          cache: gradle
+
+      - name: Build project
+        run: ./gradlew build
+
+      - name: Migrate database
+        run: ./gradlew flywayMigrate
+
+      - name: Run test
+        run: ./gradlew test --stacktrace
