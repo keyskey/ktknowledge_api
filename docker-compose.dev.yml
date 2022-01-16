@@ -1,0 +1,17 @@
+version: "3.3"
+services:
+  mysql:
+    container_name: ktknowledge_mysql
+    image: mysql:8.0
+    restart: always
+    env_file: .env
+    ports:
+      - ${MYSQL_PORT}:3306
+    volumes:
+      - mysql:/var/lib/mysql
+      - ./docker/mysql/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./docker/mysql/initdb.d:/docker-entrypoint-initdb.d
+
+volumes:
+  mysql:
+    driver: local

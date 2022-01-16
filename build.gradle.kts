@@ -53,7 +53,7 @@ tasks.withType<Test> {
 }
 
 flyway {
-	url = System.getenv("MYSQL_URL")
+	url = "jdbc:mysql://${System.getenv("MYSQL_HOST")}:${System.getenv("MYSQL_PORT")}/ktknowledge_db?autoReconnect=true&useSSL=false"
 	user = System.getenv("MYSQL_USER")
 	password = System.getenv("MYSQL_PASSWORD")
 }
